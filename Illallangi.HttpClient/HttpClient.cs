@@ -18,12 +18,12 @@ namespace Illallangi
         #region Constructors
 
         public HttpClient()
-            :this(null, null)
+            : this(null, null)
         {
         }
 
         public HttpClient(ILogger logger)
-            :this(null, logger)
+            : this(null, logger)
         {
         }
 
@@ -31,7 +31,7 @@ namespace Illallangi
             : this(config, null)
         {
         }
-        
+
         public HttpClient(IHttpClientConfig config, ILogger logger)
         {
             this.currentLogger = logger ?? new NullLogger(typeof(HttpClient));
@@ -42,6 +42,11 @@ namespace Illallangi
         #endregion
 
         #region Methods
+
+        public string HttpGet(Uri uri, string accept = "", string proxy = "")
+        {
+            return this.HttpGet(uri.AbsoluteUri, accept, proxy);
+        }
 
         public string HttpGet(string uri, string accept = "", string proxy = "")
         {
@@ -57,7 +62,8 @@ namespace Illallangi
             HttpWebRequest request = null;
             try
             {
-                request = (HttpWebRequest) WebRequest.Create(uri);
+                request = (HttpWebRequest)WebRequest.Create(uri);
+                this.Logger.Debug("Web Request created");
             }
             catch (NotSupportedException e)
             {
@@ -117,7 +123,6 @@ namespace Illallangi
 
 
             Stream responseStream = null;
-
             try
             {
                 responseStream = response.GetResponseStream();

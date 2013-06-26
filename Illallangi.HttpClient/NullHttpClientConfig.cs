@@ -2,7 +2,7 @@
 
 namespace Illallangi
 {
-    public class NullHttpClientConfig : IHttpClientConfig
+    public sealed class NullHttpClientConfig : IHttpClientConfig
     {
         public string CachePath
         {
