@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Illallangi.HttpClient</id>
+    <version>$version$</version>
+    <title>Http Client</title>
+    <authors>Illallangi Enterprises</authors>
+    <owners>Illallangi Enterprises</owners>
+    <projectUrl>http://illallangi.com</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A library to download files from HTTP</description>
+    <copyright>Copyright 2013</copyright>
+    <tags>HTTP</tags>
+  </metadata>
+</package>

@@ -1,0 +1,81 @@
+<Project ToolsVersion="4.0" DefaultTargets="All" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Import Project="$(MSBuildProjectDirectory)\tools\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets"/>
+  
+  <PropertyGroup>
+    <Configuration Condition="'$(Configuration)'==''">Release</Configuration>
+    <Version>$(BUILD_NUMBER)</Version>
+    <GitCommitHash>$(BUILD_VCS_NUMBER)</GitCommitHash>
+    <GitCommitHash Condition=" '$(GitCommitHash)' != '' ">$(GitCommitHash.Substring(0, 8))</GitCommitHash>
+    <!-- dev config -->
+    <Version Condition=" '$(Version)' == '' ">0.0.0.1</Version>
+    <SourceDir>$(MSBuildProjectDirectory)\src</SourceDir>
+    <ArtifactsDir>$(MSBuildProjectDirectory)\artifacts</ArtifactsDir>
+    <BuildDir>$(MSBuildProjectDirectory)\build</BuildDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <NuGet Include="$(MSBuildProjectDirectory)\src\.nuget\nuget.exe" />
+  </ItemGroup>
+
+  <Target Name="Clean">
+    <RemoveDir Directories="$(BuildDir)" />
+    <RemoveDir Directories="$(ArtifactsDir)" />
+  </Target>
+  
+  <Target Name="Version" DependsOnTargets="Clean">
+    <Message Text="=========== Version ===========" Importance="High" />
+
+    <GitVersion LocalPath="$(MSBuildProjectDirectory)" Condition=" '$(GitCommitHash)' == '' ">
+      <Output TaskParameter="CommitHash" PropertyName="GitCommitHash" />
+    </GitVersion>
+
+    <AssemblyInfo CodeLanguage="CS"
+                  OutputFile="$(SourceDir)\Illallangi.HttpClient\Properties\AssemblyInfo.cs"
+                  AssemblyTitle="HTTP Client"
+                  AssemblyDescription=""
+                  AssemblyCompany="Illallangi Enterprises"
+                  AssemblyProduct="HTTP Client"
+                  AssemblyCopyright="Copyright © Illallangi Enterprises 2013"
+                  ComVisible="false"
+                  AssemblyInformationalVersion="Built from hash '$(GitCommitHash)'"
+                  Guid="01635a92-4a4c-4578-ba8e-a4d7278ab433"
+                  AssemblyVersion="$(Version)"
+                  AssemblyFileVersion="$(Version)"
+                  Condition="$(Version) != '0.0.0.1'" />
+  </Target>
+
+  <Target Name="Compile" DependsOnTargets="Version">
+    <Message Text="=========== Compile ===========" Importance="High" />
+
+    <MSBuild Projects="$(SourceDir)\Illallangi.HttpClient.sln" Properties="Configuration=$(Configuration)" Targets="Rebuild" />
+  </Target>
+
+  <Target Name="Copy" DependsOnTargets="Compile">
+    <Message Text="=========== Copy ===========" Importance="High" />
+
+    <MakeDir Directories="$(BuildDir)\bin\lib" />
+    <Copy SourceFiles="$(SourceDir)\Illallangi.HttpClient\bin\$(Configuration)\Illallangi.HttpClient.dll"
+          DestinationFolder="$(BuildDir)\bin\lib" />
+  </Target>
+
+  <Target Name="Zip" DependsOnTargets="Copy">
+    <Message Text="=========== Zip ===========" Importance="High" />
+
+    <CreateItem Include="$(BuildDir)\bin\**\*.*" >
+      <Output ItemName="ZipFiles" TaskParameter="Include"/>
+    </CreateItem>
+
+    <Zip ZipFileName="$(ArtifactsDir)\Illallangi Enterprises HTTP Client v$(Version).zip" WorkingDirectory="$(BuildDir)\bin" Files="@(ZipFiles)" />
+  </Target>
+
+  <Target Name="NuGet" DependsOnTargets="Copy">
+    <Message Text="=========== NuGet ===========" Importance="High" />
+    <Exec Command='"@(NuGet)" pack "$(MSBuildProjectDirectory)\build.nuspec" -OutputDirectory $(ArtifactsDir) -BasePath $(BuildDir)\bin -Version $(Version) -verbosity detailed -NoPackageAnalysis' />
+  </Target>
+
+  <Target Name="All" DependsOnTargets="Zip;NuGet">
+    <Message Text="=========== All Done ===========" Importance="High" />
+  </Target>
+
+</Project>
