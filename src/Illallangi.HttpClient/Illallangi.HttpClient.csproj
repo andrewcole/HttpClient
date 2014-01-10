@@ -32,13 +32,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Illallangi.NullLogger, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Illallangi.NullLogger.1.0.0-CI00002\lib\net45\Illallangi.NullLogger.dll</HintPath>
+    <Reference Include="Illallangi.NullLogger">
+      <HintPath>..\packages\Illallangi.NullLogger.1.0.0.3\lib\Illallangi.NullLogger.dll</HintPath>
     </Reference>
-    <Reference Include="Illallangi.StringExtensions, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Illallangi.StringExtensions.1.0.0-CI00000\lib\net45\Illallangi.StringExtensions.dll</HintPath>
+    <Reference Include="Illallangi.StringExtensions">
+      <HintPath>..\packages\Illallangi.StringExtensions.1.0.0.3\lib\Illallangi.StringExtensions.dll</HintPath>
     </Reference>
     <Reference Include="Ninject">
       <HintPath>..\packages\Ninject.3.0.2-unstable-9\lib\net45-full\Ninject.dll</HintPath>
